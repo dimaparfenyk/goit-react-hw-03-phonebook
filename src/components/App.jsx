@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { nanoid } from "nanoid";
 import {ContactForm} from "./ContactForm/ContactForm";
 import {ContactList} from "./ContactList/ContactList";
 import { Filter } from "./Filter/Filter";
@@ -18,14 +19,21 @@ export class App extends Component {
       this.setState({contacts:parsedContacts})
     }
   };
+
   componentDidUpdate(_, prevState) {
     if (prevState.contacts !== this.state.contacts) {
       localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
    }
-  
    };
+
   addContact = contact => {
     const { contacts } = this.state
+    
+     const newContact = {
+      name: contact.name,
+      number: contact.number,
+      id:nanoid()
+    }
   
     if (contacts.find(el => el.name.toLowerCase() === contact.name.toLowerCase()))
     {
@@ -34,7 +42,7 @@ export class App extends Component {
     };
 
    this.setState((prevState) => ({
-      contacts: [...prevState.contacts, contact]
+      contacts: [...prevState.contacts, newContact]
     }));
   };
 
@@ -74,9 +82,9 @@ export class App extends Component {
           onChange={this.changeFilter}
         />
         
-        <ContactList
+          <ContactList
           contacts={visibleContacts} 
-          onDeleteContact={this.deleteContact}
+          deleteContact={this.deleteContact}
           />
           </Box>
       </Container>
